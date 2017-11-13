@@ -13,7 +13,7 @@ This provides funtionalities to deploy, update, terminate a container or contain
 
 ### How to get a Docker image of service deployment management (ONLY for Samsung internal)
 
-> dockr pull docker.sec.samsung.net:5000/edge/servicedeployment/servicedeploymentagentmanager/ubuntu_x86_64
+> docker pull docker.sec.samsung.net:5000/edge/servicedeployment/servicedeploymentagentmanager/ubuntu_x86_64
 
 ### How to run a container of service deployment management
 
