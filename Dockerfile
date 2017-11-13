@@ -15,23 +15,19 @@
 #
 ###############################################################################
 # Docker image for "Service Deployment Agent"
-FROM alpine:3.5
+FROM alpine:edge
 MAINTAINER Heejung Kim <hjnari.kim@samsung.com>
 
 # environment variables
 ENV APP_DIR=/ServiceDeploymentAgentManager
 ENV APP_PORT=48099
 
-# repositories for mongodb
-RUN echo 'http://dl-3.alpinelinux.org/alpine/v3.6/community' >> /etc/apk/repositories
-RUN echo 'http://dl-3.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories
-
 # install docker-compose
 RUN apk update
-RUN apk add curl
+#RUN apk add curl openssl
 
 # install MongoDB
-RUN apk add --no-cache --update mongodb && \
+RUN apk add --no-cache mongodb && \
     rm -rf /var/cache/apk/*
 
 #copy files
