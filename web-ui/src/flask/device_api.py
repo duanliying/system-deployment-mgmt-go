@@ -13,6 +13,7 @@ class DeviceAPI:
 
     @classmethod
     def register_api(cls, app):
+        # Get/Set SDA Manager IP
         @app.route("/sdamanager/address", methods=["GET", "POST"])
         def sda_manager_address():
             logging.info("[" + request.method + "] sda manager address - IN")
@@ -26,6 +27,7 @@ class DeviceAPI:
             else:
                 return abort(404)
 
+        # Get devices(SDAs) Info.
         @app.route("/sdamanager/devices", methods=["GET"])
         def sda_manager_devices():
             logging.info("[" + request.method + "] sda manager devices - IN")
@@ -53,6 +55,7 @@ class DeviceAPI:
             ret.update({"devices": l})
             return json.dumps(json.dumps(ret)), 200
 
+        # Set device(SDA) Info.
         @app.route("/sdamanager/device", methods=["POST"])
         def sda_manager_device():
             logging.info("[" + request.method + "] sda manager device - IN")
@@ -64,6 +67,7 @@ class DeviceAPI:
 
             return "device", 200
 
+        # Get apps Info.
         @app.route("/sdamanager/apps", methods=["GET"])
         def sda_manager_apps():
             logging.info("[" + request.method + "] sda manager apps - IN")
@@ -102,13 +106,30 @@ class DeviceAPI:
 
             return json.dumps(json.dumps(ret)), 200
 
-        @app.route("/sdamanager/app", methods=["POST"])
+        # Set app Id
+        @app.route("/sdamanager/app", methods=["POST", "DELETE"])
         def sda_manager_app():
             logging.info("[" + request.method + "] sda manager app - IN")
-            data = json.loads(request.data)
-            SDAManager.set_app_id(data["id"])
-            return "", 200
+            if request.method == "POST":
+                data = json.loads(request.data)
+                SDAManager.set_app_id(data["id"])
+                return "", 200
+            elif request.method == "DELETE":
+                response = requests.delete(
+                    url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(
+                        Port.sda_manager_port()) + "/api/v1/agents/"
+                        + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id(),
+                    timeout=300)
 
+                if response.status_code is not 200:
+                    logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
+                    abort(500)
+
+                return "", 200
+            else:
+                return abort(404)
+
+        # Install an app
         @app.route("/sdamanager/app/install", methods=["POST"])
         def sda_manager_app_install():
             logging.info("[" + request.method + "] sda manager app install - IN")
@@ -146,21 +167,7 @@ class DeviceAPI:
 
             return "", 200
 
-        @app.route("/sdamanager/app/delete", methods=["DELETE"])
-        def sda_manager_app_delete():
-            logging.info("[" + request.method + "] sda manager app delete - IN")
-
-            response = requests.delete(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents/"
-                    + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id(),
-                timeout=300)
-
-            if response.status_code is not 200:
-                logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
-                abort(500)
-
-            return "", 200
-
+        # Start an app
         @app.route("/sdamanager/app/start", methods=["GET"])
         def sda_manager_app_start():
             logging.info("[" + request.method + "] sda manager app update - IN")
@@ -192,6 +199,7 @@ class DeviceAPI:
 
             return "", 200
 
+        # Stop an app
         @app.route("/sdamanager/app/stop", methods=["GET"])
         def sda_manager_app_stop():
             logging.info("[" + request.method + "] sda manager app update - IN")
@@ -222,6 +230,7 @@ class DeviceAPI:
 
             return "", 200
 
+        # Update an app
         @app.route("/sdamanager/app/update", methods=["GET"])
         def sda_manager_app_update():
             logging.info("[" + request.method + "] sda manager app update - IN")
@@ -252,6 +261,7 @@ class DeviceAPI:
 
             return "", 200
 
+        # Get/Update app Yaml file to SDA DB
         @app.route("/sdamanager/app/yaml", methods=["GET", "POST"])
         def sda_manager_app_yaml():
             logging.info("[" + request.method + "] sda manager app YAML - IN")
@@ -286,6 +296,7 @@ class DeviceAPI:
 
                 return "", 200
 
+        # Get/Write Yaml file to Web client DB
         @app.route("/sdamanager/yaml", methods=["GET", "POST"])
         def sda_manager_yaml():
             logging.info("[" + request.method + "] sda manager YAML - IN")
@@ -311,6 +322,7 @@ class DeviceAPI:
                 logging.error("Unknown Method - OUT")
                 return abort(404)
 
+        # Register Device
         @app.route("/sdamanager/register", methods=["POST"])
         def sda_manager_device_register():
             logging.info("[" + request.method + "] sda manager device register - IN")
@@ -333,6 +345,7 @@ class DeviceAPI:
 
             return "", 200
 
+        # Unregister Device
         @app.route("/sdamanager/unregister", methods=["POST"])
         def sda_manager_device_unregister():
             logging.info("[" + request.method + "] sda manager device register - IN")
