@@ -1,25 +1,25 @@
-Docs @ Service Deployment Agent Manager
+Docs @ System Management - Service Deployment Management
 =======================================
 
 This provides funtionalities to deploy, update, terminate a container or containers to a certain edge device or a group of edge devices. Also, this provides APIs to create, update, and delete a group of edge devices which container(s) can be deployed at the same time.
 
-### How to make Service Deployment Agent Manager binary
+### How to build source codes
 
 > ./build.sh
 
-### How to make Service Deployment Agent Manager image
+### How to build Docker image
 
-> docker build --tag "image_name":"tag"
+> docker build --tag "image_name":"tag" -f Dockerfile .
 
-### How to Get Service Deployment Agent image
+### How to get an Docker image of service deployment management (ONLY for Samsung internal)
 
 > dockr pull docker.sec.samsung.net:5000/edge/servicedeployment/servicedeploymentagentmanager/ubuntu_x86_64
 
-### How to run Service Deployment Agent Manager image
+### How to run a container of service deployment management
 
-> **docker run -it -p 48099:48099 -v "host folder"/data/db:/data/db "image_name":"tag"**
+> docker run -it -p 48099:48099 -v "host folder"/data/db:/data/db "image_name":"tag"
 
-> you can also using **"docker-compose"**. <br />
+> Note that you can also using **"docker-compose"**. <br />
 > **docker-compose -f ./docker-compose_ubuntu.yml up**
 
 ## Reference
