@@ -1,0 +1,12 @@
+## SDAM docker compose file    
+
+version: '2'
+services:
+  sdam:
+    image: docker.sec.samsung.net:5000/edge/servicedeployment/servicedeploymentagentmanager/rpi_arm:latest
+    ports:
+      - "48099:48099"
+    container_name: sdam_go_rpi
+    volumes:
+      - /data/db
+...
