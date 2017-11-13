@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Service Deployment Agent Web Client</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Theme CSS -->
+    <link href="static/css/freelancer.min.css" rel="stylesheet">
+
+    <!-- Alert  CSS -->
+    <link href="static/css/sweetalert.css" rel="stylesheet">
+
+    <!-- sda CSS -->
+    <link href="static/sda/css/sda.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet"
+          type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+    <script type="text/javascript">
+         function onLoad() {
+             sdamanager_onLoad();
+         }
+    </script>
+
+</head>
+
+<body class="index" onload="onLoad()">
+
+<!-- Navigation -->
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top navbar-custom">
+    <div class="container">
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand" href="/">SDAM Web Client</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="page-scroll">
+                    <a href="/sdamanager"><font size="4" color="chocolate">SDA Manager</font></a>
+                </li>
+                <li class="page-scroll">
+                    <a href="/contact">CONTACT</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section>
+    <div id="sda_main" class="col-lg-12 sda_container">
+        <div class="row" style="padding-top:20px">
+            <div class="col-lg-12">
+                <label style="font-size:130%;">SDA Manager Address:
+                    <input id="sda_manager_ip" type="text" maxlength="22" value="" placeholder="ex) 192.168.0.1"
+                           title="Please input the SDA Manager's IP.">
+                </label>
+                <a id="btn_set_sdam_address" class="btn btn-primary" data-toggle="modal">
+                    <i class="fa fa-arrow-right fa-1x"></i>
+                </a>
+            </div>
+        </div>
+        <div class="row" style="padding-top:10px">
+            <div class="col-lg-6">
+                <a href="#dig_create_group" id="btn_create_new_group" class="btn btn-warning" data-toggle="modal"
+                   style="float:left">
+                    <i class="fa fa-users fa-1x"></i> Create New Group
+                </a>
+            </div>
+            <div class="col-lg-6">
+                <a href="#dig_register_device" id="btn_add_device" class="btn btn-success" data-toggle="modal" style="float:left">
+                    <i class="fa fa-plus-circle"></i> Add Device
+                </a>
+                <a id="btn_show_all_device" class="btn btn-success" data-toggle="modal" style="float:right">
+                    <i class="fa fa-database"></i> Show All Device
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6" style="padding-top:10px">
+                <div class="panel panel-warning filterable">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Group List</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table id="group_table" class="table table-hover noselect">
+                            <thead>
+                            <tr>
+                                <th style="font-size:130%;text-align:center;">No.</th>
+                                <th style="font-size:130%;text-align:center;">Name</th>
+                                <th style="font-size:130%;text-align:center;">Members</th>
+                            </tr>
+                            </thead>
+                            <tbody id="group_tbody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6" style="padding-top:10px">
+                <div class="panel panel-success filterable">
+                    <div class="panel-heading">
+                        <h3 id="device_list" class="panel-title">Device List</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table id="device_table" class="table table-hover noselect">
+                            <thead>
+                            <tr id="device_tr">
+                                <th style="font-size:130%;text-align:center;">No.</th>
+                                <th style="font-size:130%;text-align:center;">IP</th>
+                                <th style="font-size:130%;text-align:center;">Port</th>
+                            </tr>
+                            </thead>
+                            <tbody id="device_tbody">
+                            <tr>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="sda_side" class="div_hidden">
+        <div class="row">
+            <div class="col-lg-12">
+                <p><strong id="group_name" style="font-size:150%;"></strong></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="border_sda">
+                <div>
+                    <p>&nbsp;&nbsp;- Deploy New App
+                        <a href="#dig_group_install" id="btn_deploy_app_group" class="btn btn-primary" style="float:right" data-toggle="modal">
+                            &nbsp;<i class="fa fa-chevron-right fa-1x"></i>&nbsp;
+                        </a>
+                    </p>
+                </div>
+                <div>
+                    <p>&nbsp;&nbsp;- Members
+                        <a href="#dig_members_group" id="btn_members_group" class="btn btn-primary" style="float:right" data-toggle="modal">
+                            &nbsp;<i class="fa fa-chevron-right fa-1x"></i>&nbsp;
+                        </a>
+                    </p>
+                </div>
+                <div>
+                    <p>&nbsp;&nbsp;- Delete Group
+                        <a id="btn_delete_group" class="btn btn-primary" style="float:right" data-toggle="modal">
+                            &nbsp;<i class="fa fa-chevron-right fa-1x"></i>&nbsp;
+                        </a>
+                    </p>
+                </div>
+                <div>
+                    <p>&nbsp;&nbsp;- Apps
+                        <a id="btn_group_app" class="btn btn-primary" style="float:right" data-toggle="modal">
+                            &nbsp;<i class="fa fa-chevron-right fa-1x"></i>&nbsp;
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--Dialog Create Group-->
+<div class="modal fade" id="dig_create_group" tabindex="-1" role="dialog" aria-labelledby="basicModal"
+     aria-hidden="true">
+    <div class="modal-dialog" style="width:70%;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container" style="width:100%;">
+                    <div class="row" style="text-align:center;padding-top:15px">
+                        <h2>Create New Group</h2>
+                        <hr class="star-primary">
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <h4>Name</h4>
+                            <input class="text_radius" id="create_new_group_name" maxlength="25"
+                                   placeholder="ex) My group"
+                                   style="font-size:130%;width:100%;">
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top:10px;">
+                        <div class="col-lg-12">
+                            <h4>Members</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="panel panel-info filterable">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Non-included Device List</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <table name="not_include_device_table" class="table table-hover noselect">
+                                        <!--style="table-layout:fixed -->
+                                        <thead>
+                                        <tr name="not_include_device_tr">
+                                            <th style="font-size:130%;text-align:center;">No.</th>
+                                            <th style="font-size:130%;text-align:center;">IP</th>
+                                            <th style="font-size:130%;text-align:center;">Port</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody name="not_include_device_tbody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-warning filterable">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Included Device List</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <table name="include_device_table" class="table table-hover noselect">
+                                        <thead>
+                                        <tr name="include_device_tr">
+                                            <th style="font-size:130%;text-align:center;">No.</th>
+                                            <th style="font-size:130%;text-align:center;">IP</th>
+                                            <th style="font-size:130%;text-align:center;">Port</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody name="include_device_tbody">
+                                        <tr></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <button type="button" data-dismiss="modal" class="btn btn-default"
+                                    style="float:right">Cancel
+                            </button>
+                            <button type="button" id="btn_confirm_create_new_group" class="btn btn-default"
+                                    style="float:right;">Create
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Dialog register-->
+<div class="modal fade" id="dig_register_device" tabindex="-1" role="dialog" aria-labelledby="basicModal"
+     aria-hidden="true">
+    <div class="modal-dialog" style="width:15%;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container" style="width:100%;">
+                    <div class="row" style="text-align:center;padding-top:15px">
+                        <h3>Device Info</h3>
+                        <hr class="star-primary">
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h4>IP</h4>
+                            <input class="text_radius" id="register_new_device_ip" maxlength="20"
+                                   placeholder="ex) 127.0.0.1"
+                                   style="font-size:130%;width:100%;">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h4>PING INTERVAL</h4>
+                            <input class="text_radius" id="register_new_device_interval" maxlength="25"
+                                   placeholder="ex) 10"
+                                   style="font-size:130%;width:100%;">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <button type="button" data-dismiss="modal" class="btn btn-default"
+                                    style="float:right">Cancel
+                            </button>
+                            <button type="button" id="btn_confirm_register_new_device" class="btn btn-default"
+                                    style="float:right;padding-left:20px;padding-right:20px">Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- deploy dialog-->
+<div class="modal fade" id="dig_group_install" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog" style="width:70%;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container" style="width:100%;">
+                    <div class="row" style="text-align:center;padding-top:15px">
+                        <h2>Install New App</h2>
+                        <hr class="star-primary">
+                    </div>
+                    <div class="row">
+                        <div class="col" style="padding-left:15px;">
+                            <a href="#add_new_yaml" id="btn_add_new_yaml" class="btn btn-default" data-toggle="modal">
+                                <i class="fa fa-pencil fa-1x"></i> New
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top:15px;">
+                        <div class="col-lg-7">
+                            <div class="panel panel-default filterable">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Your own YAML</h3>
+                                </div>
+                                <div class="panel-body" style="height:500px;overflow:auto;">
+                                    <table id="yaml_table" class="table table-hover noselect">
+                                        <thead>
+                                            <tr id="yaml_tr">
+                                                <th style="font-size:130%;text-align:center;">No.</th>
+                                                <th style="font-size:130%;text-align:center;">Icon</th>
+                                                <th style="font-size:130%;text-align:center;">Name</th>
+                                                <th style="font-size:130%;text-align:center;">Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="yaml_tbody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <textarea class="textarea_radius" id="textarea_yaml"
+                                      style=";resize:None;width:100%;height:540px"></textarea>
+                            <button type="button" id="btn_cancel_app" data-dismiss="modal" class="btn btn-default"
+                                    style="float:right"> &nbsp;Cancel
+                            </button>
+                            <button type="button" id="btn_deploy_group_app" class="btn btn-default" disabled="disabled"
+                                    style="float:right">Install
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div style="text-align:center;">
+                    <ul class="list-inline item-details">
+                        <p>Visit The below sites to make your own YAML</p>
+                        <li>
+                            <strong><a href="http://swagger.io">Go to swaager.io</a></strong>
+                        </li>
+                        <li>
+                            <strong><a href="http://editor.swagger.io/#/">Go to online YAML editor</a></strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!--loading bar-->
+        <div class="outer">
+            <div class="inner">
+                <div name="loading_bar" class="modal" style="display: none;background-color:#808080;opacity: .6;">
+                    <div style="height:100px;margin-top:20%">
+                        <center><img alt="test" src="static/img/loding_bar.gif" style="width:10%;height:10%"></center>
+                        <br/>
+                        <center>
+                            <p>Waiting response from the server...</p>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="add_new_yaml" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog" style="width:30%;padding-top:25px;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container" style="width:100%;">
+                    <div class="row" style="text-align:center;padding-top:15px">
+                        <h2>Create New YAML file</h2>
+                        <hr class="">
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <h4>Name</h4>
+                            <input class="text_radius" id="create_new_yaml_name" maxlength="20" style="width:100%;">
+                        </div>
+                        <div class="col-lg-8">
+                            <h4>Icon</h4>
+                            <input class="text_radius" id="create_new_yaml_icon" style="width:100%;" type="file"
+                                   name="filename" prefix="text" accept="image/gif, image/jpeg, image/png">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h4>Description</h4>
+                            <input class="text_radius" id="create_new_yaml_description" maxlength="50"
+                                   style="width:100%;">
+                            <h4>YAML</h4>
+                            <textarea class="text_radius" id="create_new_yaml_yaml"
+                                      style="resize:None;width:100%;height:300px"></textarea>
+                            <button type="button" data-dismiss="modal" class="btn btn-default" style="float:right">
+                                &nbsp;Cancel
+                            </button>
+                            <button type="button" data-dismiss="modal" id="btn_confirm_add_new_yaml"
+                                    class="btn btn-default" style="float:right">Create
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dig_members_group" tabindex="-1" role="dialog" aria-labelledby="basicModal"
+     aria-hidden="true">
+    <div class="modal-dialog" style="width:70%;">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container" style="width:100%;">
+                    <div class="row" style="text-align:center;padding-top:15px">
+                        <h2>Members of the Group</h2>
+                        <hr class="star-primary">
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <h4>Name</h4>
+                            <p><strong id="members_group_name" style="font-size:130%;"></strong></p>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-top:10px;">
+                        <div class="col-lg-12">
+                            <h4>Members</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="panel panel-info filterable">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Non-included Device List</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <table name="not_include_device_table" class="table table-hover noselect">
+                                        <!--style="table-layout:fixed -->
+                                        <thead>
+                                        <tr name="not_include_device_tr">
+                                            <th style="font-size:130%;text-align:center;">No.</th>
+                                            <th style="font-size:130%;text-align:center;">IP</th>
+                                            <th style="font-size:130%;text-align:center;">Port</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody name="not_include_device_tbody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="panel panel-warning filterable">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Included Device List</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <table name="include_device_table" class="table table-hover noselect">
+                                        <thead>
+                                        <tr name="include_device_tr">
+                                            <th style="font-size:130%;text-align:center;">No.</th>
+                                            <th style="font-size:130%;text-align:center;">IP</th>
+                                            <th style="font-size:130%;text-align:center;">Port</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody name="include_device_tbody">
+                                        <tr></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <button type="button" data-dismiss="modal" class="btn btn-default"
+                                    style="float:right">Cancel
+                            </button>
+                            <button type="button" id="btn_save_group_members" class="btn btn-default"
+                                    style="float:right;">Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="static/vendor/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- Plugin JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+
+<!-- Contact Form JavaScript -->
+<script src="static/js/jqBootstrapValidation.js"></script>
+<script src="static/js/contact_me.js"></script>
+
+<!-- Theme JavaScript -->
+<script src="static/js/freelancer.min.js"></script>
+
+<!-- Alert JavaScript-->
+<script src="static/js/sweetalert.min.js"></script>
+
+<!-- common JavaScript-->
+<script src="static/sda/js/common.js"></script>
+
+<!-- sdamanager JavaScript-->
+<script src="static/sda/js/sdamanager.js"></script>
+
+</body>
+</html>
