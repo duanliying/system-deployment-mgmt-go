@@ -14,11 +14,33 @@
 # limitations under the License.
 #
 ###############################################################################
-#!/bin/bash
+# Docker image for "Service Deployment Agent Manager"
+FROM arm64v8/ubuntu:16.04
+MAINTAINER Heejung Kim <hjnari.kim@samsung.com>
+COPY qemu-aarch64-static /usr/bin/qemu-aarch64-static
 
-export GOPATH=$PWD
-go get gopkg.in/mgo.v2
-CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"'  src/main/main.go
+#environment variables 
+ENV APP_DIR=/ServiceDeploymentAgent
+ENV APP_PORT=48099
 
-cp /root/qemu-arm-static .
-cp /root/qemu-aarch64-static .
+# install mongodb
+RUN apt-get update
+RUN apt-get install -y mongodb
+
+#copy files
+COPY main $APP_DIR/
+COPY run.sh $APP_DIR/
+
+#expose notifications port
+EXPOSE $APP_PORT
+
+#set the working directory
+WORKDIR $APP_DIR
+
+#make mongodb volume
+RUN mkdir /data
+RUN mkdir /data/db
+VOLUME /data/db
+
+#kick off the agent container
+CMD ["sh", "run.sh"]

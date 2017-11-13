@@ -18,7 +18,7 @@
 
 export GOPATH=$PWD
 go get gopkg.in/mgo.v2
-CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"'  src/main/main.go
+CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -a -ldflags '-extldflags "-static"'  src/main/main.go
 
 cp /root/qemu-arm-static .
 cp /root/qemu-aarch64-static .
