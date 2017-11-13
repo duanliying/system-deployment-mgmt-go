@@ -7,11 +7,11 @@ This provides funtionalities to deploy, update, terminate a container or contain
 
 > ./build.sh
 
-### How to build Docker image
+### How to build a Docker image
 
 > docker build --tag "image_name":"tag" -f Dockerfile .
 
-### How to get an Docker image of service deployment management (ONLY for Samsung internal)
+### How to get a Docker image of service deployment management (ONLY for Samsung internal)
 
 > dockr pull docker.sec.samsung.net:5000/edge/servicedeployment/servicedeploymentagentmanager/ubuntu_x86_64
 
