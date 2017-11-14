@@ -54,7 +54,7 @@ $(function() {
 
         $.ajax({
             url: base_url + "/sdamanager/group/app",
-            type: "GET",
+            type: "POST",
             contentType: "application/json",
             dataType: "json",
             data: JSON.stringify(obj),

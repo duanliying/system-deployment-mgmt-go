@@ -310,16 +310,16 @@ class GroupAPI:
             return json.dumps(json.dumps(ret)), 200
 
         # Get a group's app Info & Delete a group's app
-        @app.route("/sdamanager/group/app", methods=["GET", "DELETE"])
+        @app.route("/sdamanager/group/app", methods=["POST", "DELETE"])
         def sda_manager_group_app():
-            if request.method == "GET":
+            if request.method == "POST":
                 logging.info("[" + request.method + "] sda manager group app - IN")
 
                 l = list()
                 l2 = list()
                 d = dict()
                 ret = dict()
-
+                print json.loads(request.data)
                 SDAManager.set_app_id(json.loads(request.data)["id"])
 
                 response = requests.get(
