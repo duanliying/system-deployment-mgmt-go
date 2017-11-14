@@ -16,7 +16,6 @@
 ###############################################################################
 # Docker image for "Service Deployment Agent"
 FROM alpine:edge
-MAINTAINER Heejung Kim <hjnari.kim@samsung.com>
 
 # environment variables
 ENV APP_DIR=/ServiceDeploymentAgentManager
