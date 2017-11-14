@@ -22,6 +22,18 @@ This provides funtionalities to deploy, update, terminate a container or contain
 > Note that you can also using **"docker-compose"**. <br />
 > **docker-compose -f ./docker-compose_ubuntu.yml up**
 
+### How to enable QEMU environment on your computer (i.e. Ubuntu machine)
+
+> apt-get install -y qemu-user-static binfmt-support
+
+> (For ARM 32bit) <br />
+> echo ':arm:M::\x7fELF\x01~~~:/usr/bin/qemu-arm-static' > /proc/sys/fs/binfmt_misc/register <br />
+> cp /usr/bin/qemu-arm-static <project_root_folder>/
+
+> (For ARM 64bit) <br />
+> echo ':aarch64:M::\x7fELF~~:/usr/bin/qemu-aarch64-static:' > /proc/sys/fs/binfmt_misc/register <br />
+> cp /usr/bin/qemu-aarch64-static <project_root_folder>/
+
 ## Reference
 
 ##### Golang install
@@ -30,3 +42,4 @@ This provides funtionalities to deploy, update, terminate a container or contain
 ##### Dockerfile
 > for ubuntu_x86_64 : Dockerfile <br />
 > for raspberry pi3 : Dockerfile_RPI3 <br />
+
