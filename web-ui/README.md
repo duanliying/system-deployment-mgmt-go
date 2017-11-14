@@ -9,11 +9,4 @@
 
  * Now you can use your own Web Client App on <your IP>:<5555>
 
-## Copyright and license
-
- Code and documentation copyright Sharerience.
-
-## Contact
-
- Jihun Ha <jihun.ha@samsung.com>
 
