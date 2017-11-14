@@ -16,7 +16,7 @@
 ###############################################################################
 # Docker image for "Service Deployment Agent Manager"
 FROM arm64v8/ubuntu:16.04
-MAINTAINER Heejung Kim <hjnari.kim@samsung.com>
+
 COPY qemu-aarch64-static /usr/bin/qemu-aarch64-static
 
 #environment variables 

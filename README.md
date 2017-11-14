@@ -30,11 +30,3 @@ This provides funtionalities to deploy, update, terminate a container or contain
 ##### Dockerfile
 > for ubuntu_x86_64 : Dockerfile <br />
 > for raspberry pi3 : Dockerfile_RPI3 <br />
-
-## Copyright and license
-
- Code and documentation copyright Team Sharerience.
-
-## Contact
-
- Jihun Ha <jihun.ha@samsung.com>

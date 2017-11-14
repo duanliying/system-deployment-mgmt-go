@@ -3,10 +3,10 @@
 version: '2'
 services:
   sdam:
-    container_name: sdam_go_ubuntu
-    image: docker.sec.samsung.net:5000/edge/servicedeployment/servicedeploymentagentmanager/ubuntu_x86_64:latest
+    image: deployment_mgmt_x86_64:latest # Change it to a name of image built on your computer
     ports:
       - "48099:48099"
+    container_name: sdam_go_ubuntu
     volumes:
       - /data/db
 ...
