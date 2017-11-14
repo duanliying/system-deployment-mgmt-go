@@ -103,8 +103,6 @@ class DeviceAPI:
                     logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
                     abort(500)
 
-                print response2.json()["services"]
-
                 d.update({"services": len(response2.json()["services"])})
                 d.update({"state": response2.json()["state"]})
 
