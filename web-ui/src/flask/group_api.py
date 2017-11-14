@@ -13,6 +13,7 @@ class GroupAPI:
 
     @classmethod
     def register_api(cls, app):
+        # Get groups Info.
         @app.route("/sdamanager/groups", methods=["GET"])
         def sda_manager_groups():
             logging.info("[" + request.method + "] sda manager groups - IN")
@@ -56,6 +57,7 @@ class GroupAPI:
 
             return json.dumps(json.dumps(ret)), 200
 
+        # Get devices(SDAs) in selected group
         @app.route("/sdamanager/group", methods=["POST"])
         def sda_manager_group():
             logging.info("[" + request.method + "] sda manager group - IN")
@@ -96,6 +98,7 @@ class GroupAPI:
 
             return json.dumps(json.dumps(ret)), 200
 
+        # Create a group
         @app.route("/sdamanager/group/create", methods=["POST"])
         def sda_manager_create_group():
             logging.info("[" + request.method + "] sda manager create group - IN")
@@ -132,6 +135,7 @@ class GroupAPI:
 
             return "", 200
 
+        # Delete a group
         @app.route("/sdamanager/group/delete", methods=["DELETE"])
         def sda_manager_group_delete():
             logging.info("[" + request.method + "] sda manager group delete - IN")
@@ -185,6 +189,7 @@ class GroupAPI:
 
             return json.dumps(json.dumps(ret)), 200
 
+        # Deploy an app to the group
         @app.route("/sdamanager/group/deploy", methods=["POST"])
         def sda_manager_group_app_install():
             logging.info("[" + request.method + "] sda manager group app install - IN")
@@ -223,6 +228,7 @@ class GroupAPI:
 
             return json.dumps(json.dumps(ret)), 200
 
+        # Change an group members
         @app.route("/sdamanager/group/members", methods=["POST"])
         def sda_manager_group_members():
             logging.info("[" + request.method + "] sda manager group members - IN")
@@ -267,6 +273,7 @@ class GroupAPI:
 
             return "", 200
 
+        # Get a group apps Info.
         @app.route("/sdamanager/group/apps", methods=["GET"])
         def sda_manager_group_apps():
             logging.info("[" + request.method + "] sda manager group apps - IN")
@@ -302,6 +309,7 @@ class GroupAPI:
 
             return json.dumps(json.dumps(ret)), 200
 
+        # Get a group's app Info & Delete a group's app
         @app.route("/sdamanager/group/app", methods=["GET", "DELETE"])
         def sda_manager_group_app():
             if request.method == "GET":
@@ -359,6 +367,7 @@ class GroupAPI:
 
                 return "", 200
 
+        # Start a group's app
         @app.route("/sdamanager/group/app/start", methods=["GET"])
         def sda_manager_group_app_start():
             logging.info("[" + request.method + "] sda manager group app update - IN")
@@ -375,6 +384,7 @@ class GroupAPI:
 
             return "", 200
 
+        # Stop a group's app
         @app.route("/sdamanager/group/app/stop", methods=["GET"])
         def sda_manager_group_app_stop():
             logging.info("[" + request.method + "] sda manager group app update - IN")
@@ -391,6 +401,7 @@ class GroupAPI:
 
             return "", 200
 
+        # Update a group's app
         @app.route("/sdamanager/group/app/update", methods=["GET"])
         def sda_manager_group_app_update():
             logging.info("[" + request.method + "] sda manager group app update - IN")
@@ -407,6 +418,7 @@ class GroupAPI:
 
             return "", 200
 
+        # Update a group's app Yaml file to SDA DB
         @app.route("/sdamanager/group/app/yaml", methods=["POST"])
         def sda_manager_group_app_yaml():
             logging.info("[" + request.method + "] sda manager group app YAML - IN")

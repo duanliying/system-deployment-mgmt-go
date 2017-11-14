@@ -63,8 +63,8 @@ $(function() {
         });
     });
 
-     $('#btn_delete_app').click(function(){
-		swal({
+    $('#btn_delete_app').click(function(){
+        swal({
             title:"Are you sure?",
             text:"The app will not be able to recover this.",
             type:"warning",
@@ -79,7 +79,7 @@ $(function() {
             function(){
                 setTimeout(function(){
                     $.ajax({
-                    url: base_url +"/sdamanager/app/delete",
+                    url: base_url +"/sdamanager/app",
                     type: "DELETE",
                     error: function(error) {
                         swal("server return error", "", "error");
@@ -96,7 +96,7 @@ $(function() {
               }, 2000);
             }
         );
-	});
+    });
 
     $("#btn_update_app").click(function() {
         swal({
