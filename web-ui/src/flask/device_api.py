@@ -102,6 +102,7 @@ class DeviceAPI:
                 if response2.status_code is not 200:
                     logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
                     abort(500)
+                    
                 d.update({"services": len(response2.json()["services"])})
                 d.update({"state": response2.json()["state"]})
 
