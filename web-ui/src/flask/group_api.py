@@ -319,7 +319,7 @@ class GroupAPI:
                 l2 = list()
                 d = dict()
                 ret = dict()
-                
+
                 SDAManager.set_app_id(json.loads(request.data)["id"])
 
                 response = requests.get(
