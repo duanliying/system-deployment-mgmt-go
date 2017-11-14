@@ -17,6 +17,7 @@
 # Docker image for "Service Deployment Agent Manager"
 FROM arm64v8/ubuntu:16.04
 
+# If you don't need QEMU, please uncomment the below command. Otherwise, please refer to README file to use QEMU
 COPY qemu-aarch64-static /usr/bin/qemu-aarch64-static
 
 #environment variables 
