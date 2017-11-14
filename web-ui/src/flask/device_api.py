@@ -94,11 +94,22 @@ class DeviceAPI:
 
             for obj in response.json()["apps"]:
                 d.update({"id": str(obj)})
+                response2 = requests.get(
+                    url="http://" + SDAManager().get_sda_manager_ip() + ":" + str( Port.sda_manager_port()) + "/api/v1/agents/"
+                        + SDAManager.get_device_id() + "/apps/" + str(obj),
+                    timeout=300)
+
+                if response2.status_code is not 200:
+                    logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
+                    abort(500)
+                    
+                d.update({"services": len(response2.json()["services"])})
+                d.update({"state": response2.json()["state"]})
+
                 for app in apps:
                     if "id" in app and app["id"] == str(obj):
                         d.update({"name": app["name"]})
-                        d.update({"services": app["services"]})
-                        d.update({"state": app["state"]})
+
                 l.append(d)
 
             ret.update({"device": "IP: " + SDAManager.get_device_ip() + ", PORT: " + SDAManager.get_device_port(),
@@ -148,10 +159,7 @@ class DeviceAPI:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
                 abort(500)
 
-            d.update({"id": response.json()["id"],
-                      "name": data["name"],
-                      "services": str(data["data"].count("image:")),
-                      "state": "started"})
+            d.update({"id": response.json()["id"], "name": data["name"]})
 
             root_path = os.getcwd()
             with open(root_path + "/static/user/apps", 'r') as content_file:
@@ -172,7 +180,6 @@ class DeviceAPI:
         def sda_manager_app_start():
             logging.info("[" + request.method + "] sda manager app update - IN")
 
-            apps = dict()
             response = requests.post(
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents/"
                     + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id()
@@ -183,20 +190,6 @@ class DeviceAPI:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
                 abort(500)
 
-            root_path = os.getcwd()
-            with open(root_path + "/static/user/apps", 'r') as content_file:
-                content = content_file.read()
-                if content != "":
-                    apps = json.loads(content)
-
-            with open(root_path + "/static/user/apps", 'w+') as content_file:
-                for app in apps["apps"]:
-                    if app["id"] == SDAManager.get_app_id():
-                        app["state"] = "started"
-                        break
-
-                content_file.write(json.dumps(apps))
-
             return "", 200
 
         # Stop an app
@@ -204,7 +197,6 @@ class DeviceAPI:
         def sda_manager_app_stop():
             logging.info("[" + request.method + "] sda manager app update - IN")
 
-            apps = dict()
             response = requests.post(
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents/"
                     + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id()
@@ -215,19 +207,6 @@ class DeviceAPI:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
                 abort(500)
 
-            root_path = os.getcwd()
-            with open(root_path + "/static/user/apps", 'r') as content_file:
-                content = content_file.read()
-                if content != "":
-                    apps = json.loads(content)
-
-            with open(root_path + "/static/user/apps", 'w+') as content_file:
-                for app in apps["apps"]:
-                    if app["id"] == SDAManager.get_app_id():
-                        app["state"] = "stopped"
-
-                content_file.write(json.dumps(apps))
-
             return "", 200
 
         # Update an app
@@ -235,7 +214,6 @@ class DeviceAPI:
         def sda_manager_app_update():
             logging.info("[" + request.method + "] sda manager app update - IN")
 
-            apps = dict()
             response = requests.post(
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents/"
                     + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id()
@@ -245,19 +223,6 @@ class DeviceAPI:
             if response.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
                 abort(500)
-
-            root_path = os.getcwd()
-            with open(root_path + "/static/user/apps", 'r') as content_file:
-                content = content_file.read()
-                if content != "":
-                    apps = json.loads(content)
-
-            with open(root_path + "/static/user/apps", 'w+') as content_file:
-                for app in apps["apps"]:
-                    if app["id"] == SDAManager.get_app_id():
-                        app["state"] = "started"
-
-                content_file.write(json.dumps(apps))
 
             return "", 200
 
