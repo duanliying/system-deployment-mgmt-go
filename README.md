@@ -27,12 +27,10 @@ This provides funtionalities to deploy, update, terminate a container or contain
 > apt-get install -y qemu-user-static binfmt-support
 
 > (For ARM 32bit) <br />
-> echo ':arm:M::\x7fELF\x01~~~:/usr/bin/qemu-arm-static' > /proc/sys/fs/binfmt_misc/register <br />
-> cp /usr/bin/qemu-arm-static <project_root_folder>/
+> echo ':arm:M::\x7fELF\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/bin/qemu-arm-static:' > /proc/sys/fs/binfmt_misc/register <br />
 
 > (For ARM 64bit) <br />
-> echo ':aarch64:M::\x7fELF~~:/usr/bin/qemu-aarch64-static:' > /proc/sys/fs/binfmt_misc/register <br />
-> cp /usr/bin/qemu-aarch64-static <project_root_folder>/
+> echo ':aarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\xb7:\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff:/usr/bin/qemu-aarch64-static:' > /proc/sys/fs/binfmt_misc/register <br />
 
 ## Reference
 
