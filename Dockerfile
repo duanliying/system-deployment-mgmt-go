@@ -15,7 +15,7 @@
 #
 ###############################################################################
 # Docker image for "Service Deployment Agent"
-FROM alpine:edge
+FROM alpine:3.6
 
 # environment variables
 ENV APP_DIR=/ServiceDeploymentAgentManager
