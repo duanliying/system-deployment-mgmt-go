@@ -28,7 +28,7 @@ func TestCalledConnectWhenConnectReturnError_ExpectRetrunError(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	url := "localhost:27017"
+	url := "127.0.0.1:27017"
 	dummyError := errors.DBConnectionError{}
 
 	builderMockObj := mocks.NewMockBuilder(mockCtrl)
@@ -56,7 +56,7 @@ func TestCalledConnectWhenCreateDBReturnError_ExpectRetrunError(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	url := "localhost:27017"
+	url := "127.0.0.1:27017"
 	dummyError := errors.DBConnectionError{}
 
 	builderMockObj := mocks.NewMockBuilder(mockCtrl)
@@ -85,7 +85,7 @@ func TestCalled_Connect_ExpectSuccess(t *testing.T) {
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 
-	url := "localhost:27017"
+	url := "127.0.0.1:27017"
 	dbManager := mongo.MongoDBManager{}
 
 	builderMockObj := mocks.NewMockBuilder(mockCtrl)

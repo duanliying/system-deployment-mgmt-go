@@ -104,7 +104,7 @@ func (DBConnector) Connect() (DBManager, error) {
 	defer logger.Logging(logger.DEBUG, "OUT")
 
 	// TODO: Should be updated to support different types of databases.
-	url := "localhost:27017"
+	url := "127.0.0.1:27017"
 
 	err := mgoBuilder.Connect(url)
 	if err != nil {
