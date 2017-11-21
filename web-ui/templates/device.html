@@ -70,92 +70,113 @@
 
 <!-- Section -->
 <section>
-    <div class="container">
-        <div id="sda_main" class="col-lg-12 sda_container">
-            <div class="row" style="padding-top:20px">
-                <div class="col-lg-12">
-                    <p align="left"><strong id="device_info"></strong></p>
+    <div id="sda_main" class="col-lg-12 sda_container">
+        <div class="row" style="padding-top:20px">
+            <div class="col-lg-12">
+                <p align="left"><strong id="device_info"></strong></p>
+            </div>
+        </div>
+        <div class="row" style="padding-top:10px">
+            <div class="col-lg-12">
+                <a href="#dig_install" id="btn_install_new_app" class="btn btn-info" style="float:left" data-toggle="modal">
+                    <i class="fa fa-download fa-1x"></i> Install New App
+                </a>
+                <a id="btn_delete_device" class="btn btn-danger" style="float:right" data-toggle="modal">
+                    &nbsp;<i class="fa fa-minus-circle"></i>&nbsp;Delete Device
+                </a>
+            </div>
+        </div>
+        <div class="row" style="padding-top:10px">
+            <div class="col-lg-6" style="padding-top:10px">
+                <div class="panel panel-info filterable">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">App List</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table id="app_table" class="table table-hover noselect">
+                            <thead>
+                            <tr id="app_tr">
+                                <th style="font-size:130%;text-align:center;">No.</th>
+                                <th style="font-size:130%;text-align:center;">Name</th>
+                                <th style="font-size:130%;text-align:center;">Services</th>
+                                <th style="font-size:130%;text-align:center;">State</th>
+                            </tr>
+                            </thead>
+                            <tbody id="app_tbody">
+                            <tr>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-            <div class="row" style="padding-top:10px">
-                <div class="col-lg-12">
-                    <a href="#dig_install" id="btn_install_new_app" class="btn btn-info" style="float:left" data-toggle="modal">
-                        <i class="fa fa-download fa-1x"></i> Install New App
-                    </a>
-                    <a id="btn_delete_device" class="btn btn-danger" style="float:right" data-toggle="modal">
-                        &nbsp;<i class="fa fa-minus-circle"></i>&nbsp;Delete Device
-                    </a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12" style="padding-top:10px">
-                    <div class="panel panel-info filterable">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">App List</h3>
-                        </div>
-                        <div class="panel-body">
-                            <table id="app_table" class="table table-hover noselect">
-                                <thead>
-                                <tr id="app_tr">
-                                    <th style="font-size:130%;text-align:center;">No.</th>
-                                    <th style="font-size:130%;text-align:center;">Name</th>
-                                    <th style="font-size:130%;text-align:center;">Services</th>
-                                    <th style="font-size:130%;text-align:center;">State</th>
-                                </tr>
-                                </thead>
-                                <tbody id="app_tbody">
-                                <tr>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
+            <div class="col-lg-6" style="padding-top:10px">
+                <div class="panel panel-success filterable">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Service List</h3>
+                    </div>
+                    <div class="panel-body">
+                        <table id="service_table" class="table table-hover noselect">
+                            <thead>
+                            <tr id="service_tr">
+                                <th style="font-size:130%;text-align:center;">No.</th>
+                                <th style="font-size:130%;text-align:center;">Name</th>
+                                <th style="font-size:130%;text-align:center;">State</th>
+                                <th style="font-size:130%;text-align:center;">ExitCode</th>
+                            </tr>
+                            </thead>
+                            <tbody id="service_tbody">
+                            <tr>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-        <div id="sda_side" class="div_hidden">
-            <div class="row">
-                <div class="col-lg-12">
-                    <p><strong id="app_name" style="font-size:150%"></strong></p>
-                </div>
+    </div>
+    <div id="sda_side" class="div_hidden">
+        <div class="row">
+            <div class="col-lg-12">
+                <p><strong id="app_name" style="font-size:150%"></strong></p>
             </div>
-            <div class="row">
-                <div class="border_sda">
-                    <div>
-                        <p>&nbsp;&nbsp;- Start App
-                            <a id="btn_start_app" class="btn btn-primary" style="float:right" data-toggle="modal">
-                                &nbsp;<i class="fa fa-chevron-right fa-1x"></i>&nbsp;
-                            </a>
-                        </p>
-                    </div>
-                    <div>
-                        <p>&nbsp;&nbsp;- Stop App
-                            <a id="btn_stop_app" class="btn btn-primary" style="float:right" data-toggle="modal">
-                                &nbsp;<i class="fa fa-chevron-right fa-1x"></i>&nbsp;
-                            </a>
-                        </p>
-                    </div>
-                    <div>
-                        <p>&nbsp;&nbsp;- Update App
-                            <a id="btn_update_app" class="btn btn-primary" style="float:right" data-toggle="modal">
-                                &nbsp;<i class="fa fa-chevron-right fa-1x"></i>&nbsp;
-                            </a>
-                        </p>
-                    </div>
-                    <div>
-                        <p>&nbsp;&nbsp;- Delete App
-                            <a id="btn_delete_app" class="btn btn-primary" style="float:right" data-toggle="modal">
-                                &nbsp;<i class="fa fa-chevron-right fa-1x"></i>&nbsp;
-                            </a>
-                        </p>
-                    </div>
-                    <div>
-                        <p>&nbsp;&nbsp;- Update YAML
-                            <a href="#dig_update_YAML" id="btn_update_YAML" class="btn btn-primary" style="float:right" data-toggle="modal">
-                                &nbsp;<i class="fa fa-chevron-right fa-1x"></i>&nbsp;
-                            </a>
-                        </p>
-                    </div>
+        </div>
+        <div class="row">
+            <div class="border_sda">
+                <div>
+                    <p>&nbsp;&nbsp;- Start App
+                        <a id="btn_start_app" class="btn btn-primary" style="float:right" data-toggle="modal">
+                            &nbsp;<i class="fa fa-chevron-right fa-1x"></i>&nbsp;
+                        </a>
+                    </p>
+                </div>
+                <div>
+                    <p>&nbsp;&nbsp;- Stop App
+                        <a id="btn_stop_app" class="btn btn-primary" style="float:right" data-toggle="modal">
+                            &nbsp;<i class="fa fa-chevron-right fa-1x"></i>&nbsp;
+                        </a>
+                    </p>
+                </div>
+                <div>
+                    <p>&nbsp;&nbsp;- Update App
+                        <a id="btn_update_app" class="btn btn-primary" style="float:right" data-toggle="modal">
+                            &nbsp;<i class="fa fa-chevron-right fa-1x"></i>&nbsp;
+                        </a>
+                    </p>
+                </div>
+                <div>
+                    <p>&nbsp;&nbsp;- Delete App
+                        <a id="btn_delete_app" class="btn btn-primary" style="float:right" data-toggle="modal">
+                            &nbsp;<i class="fa fa-chevron-right fa-1x"></i>&nbsp;
+                        </a>
+                    </p>
+                </div>
+                <div>
+                    <p>&nbsp;&nbsp;- Update YAML
+                        <a href="#dig_update_YAML" id="btn_update_YAML" class="btn btn-primary" style="float:right" data-toggle="modal">
+                            &nbsp;<i class="fa fa-chevron-right fa-1x"></i>&nbsp;
+                        </a>
+                    </p>
                 </div>
             </div>
         </div>

@@ -34,6 +34,7 @@ class DeviceAPI:
 
             l = list()
             ret = dict()
+
             response = requests.get(
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents",
                 timeout=300)
@@ -74,7 +75,6 @@ class DeviceAPI:
 
             l = list()
             apps = list()
-            d = dict()
             ret = dict()
 
             response = requests.get(
@@ -93,6 +93,7 @@ class DeviceAPI:
                     apps = json.loads(content)["apps"]
 
             for obj in response.json()["apps"]:
+                d = dict()
                 d.update({"id": str(obj)})
                 response2 = requests.get(
                     url="http://" + SDAManager().get_sda_manager_ip() + ":" + str( Port.sda_manager_port()) + "/api/v1/agents/"
@@ -102,7 +103,7 @@ class DeviceAPI:
                 if response2.status_code is not 200:
                     logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
                     abort(500)
-                    
+
                 d.update({"services": len(response2.json()["services"])})
                 d.update({"state": response2.json()["state"]})
 
@@ -122,9 +123,32 @@ class DeviceAPI:
         def sda_manager_app():
             logging.info("[" + request.method + "] sda manager app - IN")
             if request.method == "POST":
+
+                l = list()
+                ret = dict()
+
                 data = json.loads(request.data)
                 SDAManager.set_app_id(data["id"])
-                return "", 200
+
+                response = requests.get(
+                    url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents/"
+                        + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id(),
+                    timeout=300)
+
+                if response.status_code is not 200:
+                    logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
+                    abort(500)
+
+                for obj in response.json()["services"]:
+                    d = dict()
+                    d.update({"name": str(obj["name"])})
+                    d.update({"state": str(obj["state"]["Status"])})
+                    d.update({"exitcode": str(obj["state"]["ExitCode"])})
+                    l.append(d)
+
+                ret.update({"services": l})
+
+                return json.dumps(json.dumps(ret)), 200
             elif request.method == "DELETE":
                 response = requests.delete(
                     url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(

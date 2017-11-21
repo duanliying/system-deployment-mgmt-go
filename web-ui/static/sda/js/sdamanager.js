@@ -251,6 +251,7 @@ $(function() {
             success: function(data, code) {
                 if (code == "success") {
                     $("#sda_manager_ip").val(data);
+                    swal("Connected!", "", "success");
                     get_groups();
                 }
                 else {
