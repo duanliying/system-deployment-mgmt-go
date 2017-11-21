@@ -19,11 +19,11 @@ class GroupAPI:
             logging.info("[" + request.method + "] sda manager groups - IN")
 
             l = list()
-            d = dict()
             ret = dict()
 
             # No Input Target Address
             if SDAManager().get_sda_manager_ip() == "":
+                d = dict()
                 d.update({"address": ""})
                 return json.dumps(d), 200
 
@@ -40,6 +40,7 @@ class GroupAPI:
                 content = content_file.read()
 
             for obj in response.json()["groups"]:
+                d = dict()
                 if "id" in obj:
                     d.update({"id": str(obj["id"])})
                     if content != "":
@@ -63,7 +64,6 @@ class GroupAPI:
             logging.info("[" + request.method + "] sda manager group - IN")
 
             l = list()
-            d = dict()
             ret = dict()
 
             data = json.loads(request.data)
@@ -85,6 +85,7 @@ class GroupAPI:
 
             for obj in response2.json()["agents"]:
                 for member in response.json()["members"]:
+                    d = dict()
                     if obj["id"] == member:
                         if "id" in obj:
                             d.update({"id": str(obj["id"])})
@@ -157,7 +158,6 @@ class GroupAPI:
 
             l = list()
             l2 = list()
-            d = dict()
             ret = dict()
 
             response = requests.get(
@@ -175,8 +175,8 @@ class GroupAPI:
             for obj in response.json()["members"]:
                 l2.append(str(obj))
 
-            d = dict()
             for obj in response2.json()["agents"]:
+                d = dict()
                 if "id" in obj and str(obj["id"]) in l2:
                     d.update({"id": str(obj["id"])})
                 if "host" in obj:
@@ -209,7 +209,7 @@ class GroupAPI:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
                 abort(500)
 
-            d.update({"id": response.json()["id"], "name": data["name"], "services": str(data["data"].count("image:")), "state": "started"})
+            d.update({"id": response.json()["id"], "name": data["name"]})
 
             root_path = os.getcwd()
             with open(root_path + "/static/user/apps", 'r') as content_file:
@@ -280,11 +280,11 @@ class GroupAPI:
 
             l = list()
             apps = list()
-            d = dict()
             ret = dict()
 
             response = requests.get(
-                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups/" + SDAManager.get_group_id() + "/apps",
+                url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups/"
+                    + SDAManager.get_group_id() + "/apps",
                 timeout=300)
 
             if response.status_code is not 200:
@@ -298,11 +298,22 @@ class GroupAPI:
                     apps = json.loads(content)["apps"]
 
             for obj in response.json()["apps"]:
+                d = dict()
                 d.update({"id": str(obj["id"])})
+                response2 = requests.get(
+                    url="http://" + SDAManager().get_sda_manager_ip() + ":" + str( Port.sda_manager_port()) + "/api/v1/groups/"
+                        + SDAManager.get_group_id() + "/apps/" + str(obj["id"]),
+                    timeout=300)
+
+                if response2.status_code is not 200:
+                    logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
+                    abort(500)
+
+                d.update({"services": len(response2.json()["responses"][0]["services"])})
+
                 for app in apps:
                     if "id" in app and app["id"] == str(obj["id"]):
                         d.update({"name": app["name"]})
-                        d.update({"services": app["services"]})
                 l.append(d)
 
             ret.update({"group": "Group Name: " + SDAManager.get_current_group_name(), "apps": l})
@@ -317,7 +328,6 @@ class GroupAPI:
 
                 l = list()
                 l2 = list()
-                d = dict()
                 ret = dict()
 
                 SDAManager.set_app_id(json.loads(request.data)["id"])
@@ -336,6 +346,7 @@ class GroupAPI:
                     abort(500)
 
                 for obj in response.json()["agents"]:
+                    d = dict()
                     if "id" in obj:
                         d.update({"id": str(obj["id"])})
                     if "host" in obj:

@@ -7,15 +7,15 @@ function device_onLoad() {
 function get_apps() {
     sda_manager_control_hide();
     $("#app_tbody").empty();
+    $("#service_tbody").empty();
 
     $.ajax({
         url: base_url +"/sdamanager/apps",
         type: "GET",
         contentType: "application/json",
         dataType: "json",
-
         error: function(error) {
-            swal("server return error", "", "error");
+            swal("Server return error", "", "error");
         },
         success: function(data, code) {
             if (code == "success") {
@@ -32,7 +32,7 @@ function get_apps() {
                     + '</tr>');
                 }
             } else {
-                swal("server return error", "", "error");
+                swal("Server return error", "", "error");
             }
         }
     });
@@ -41,6 +41,7 @@ function get_apps() {
 $(function() {
     $("#app_tbody").on("click", "tr", function(e) {
         sda_manager_control_show();
+        $("#service_tbody").empty();
         $("tr").removeClass("active");
         $(this).addClass("active");
         $("#app_name").text($(this).find("td:eq(1)").text());
@@ -51,13 +52,26 @@ $(function() {
             url: base_url +"/sdamanager/app",
             type: "POST",
             contentType: "application/json",
+            dataType: "json",
             data: JSON.stringify(obj),
             error: function(error) {
-                swal("server return error", "", "error");
+                swal("Server return error",  "", "error");
             },
             success: function(data, code) {
-                if (code != "success") {
-                    alert("server return error.");
+                if (code == "success") {
+                    var list = $.parseJSON(data);
+                    var listLen = list.services.length;
+                    for (var i = 0; i < listLen; i++) {
+                        var No = i + 1;
+                        $("#service_table tbody").append('<tr>'
+                        + '<td align="center" class="table_sda" style="vertical-align: middle;">' + No + '</td>'
+                        + '<td align="center" class="table_sda" style="vertical-align: middle;">' + list.services[i].name + '</td>'
+                        + '<td align="center" class="table_sda" style="vertical-align: middle;">' + list.services[i].state+ '</td>'
+                        + '<td align="center" class="table_sda" style="vertical-align: middle;">' + list.services[i].exitcode + '</td>'
+                        + '</tr>');
+                    }
+                } else {
+                    swal("Server return error", "", "error");
                 }
             }
         });
@@ -82,14 +96,14 @@ $(function() {
                     url: base_url +"/sdamanager/app",
                     type: "DELETE",
                     error: function(error) {
-                        swal("server return error", "", "error");
+                        swal("Server return error", "", "error");
                     },
                     success: function(data, code) {
                         if (code == "success") {
                             get_apps();
                             swal("Deleted!", "", "success");
                         } else {
-                            swal("server return error", "", "error");
+                            swal("Server return error", "", "error");
                         }
                     }
                 });
@@ -116,14 +130,14 @@ $(function() {
                         url: base_url +"/sdamanager/app/update",
                         type: "GET",
                         error: function(error) {
-                            swal("server return error", "", "error");
+                            swal("Server return error", "", "error");
                         },
                         success: function(data, code) {
                             if (code == "success") {
                                 get_apps();
                                 swal("Updated!", "", "success");
                             } else {
-                                swal("server return error", "", "error");
+                                swal("Server return error", "", "error");
                             }
                         }
                     });
@@ -149,14 +163,14 @@ $(function() {
                         url: base_url +"/sdamanager/app/start",
                         type: "GET",
                         error: function(error) {
-                            swal("server return error", "", "error");
+                            swal("Server return error", "", "error");
                         },
                         success: function(data, code) {
                             if (code == "success") {
                                 get_apps();
                                 swal("Started!", "", "success");
                             } else {
-                                swal("server return error", "", "error");
+                                swal("Server return error", "", "error");
                             }
                         }
                     });
@@ -182,14 +196,14 @@ $(function() {
                         url: base_url +"/sdamanager/app/stop",
                         type: "GET",
                         error: function(error) {
-                            swal("server return error", "", "error");
+                            swal("Server return error", "", "error");
                         },
                         success: function(data, code) {
                             if (code == "success") {
                                 get_apps();
                                 swal("Stoped!", "", "success");
                             } else {
-                                swal("server return error", "", "error");
+                                swal("Server return error", "", "error");
                             }
                         }
                     });
@@ -203,14 +217,14 @@ $(function() {
             url: base_url +"/sdamanager/app/yaml",
             type: "GET",
             error: function(error) {
-                swal("server return error", "", "error");
+                swal("Server return error", "", "error");
             },
             success: function(data, code) {
                 if (code == "success") {
                     var obj = $.parseJSON(data);
                     $("#textarea_update_yaml").val(obj);
                 } else {
-                    swal("server return error", "", "error");
+                    swal("Server return error", "", "error");
                 }
             }
         });
@@ -238,14 +252,14 @@ $(function() {
                         contentType: "application/json",
                         data: JSON.stringify(obj),
                         error: function(error) {
-                            swal("server return error", "", "error");
+                            swal("Server return error", "", "error");
                         },
                         success: function(data, code) {
                             if (code == "success") {
                                 swal("Updated!", "", "success");
                                 $('#dig_update_YAML').modal('toggle');
                             } else {
-                                alert("server return error.");
+                                alert("Server return error.");
                             }
                         }
                     });
@@ -272,7 +286,7 @@ $(function() {
                         url: base_url +"/sdamanager/unregister",
                         type: "POST",
                         error: function(error) {
-                            swal("server return error", "", "error");
+                            swal("Server return error", "", "error");
                         },
                         success: function(data, code) {
                             if (code == "success") {
