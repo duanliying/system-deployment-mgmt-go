@@ -18,7 +18,7 @@ package agent
 
 type AgentInterface interface {
 	// AddAgent add new agent to database.
-	AddAgent(ip string, body string) (int, map[string]interface{}, error)
+	AddAgent(body string) (int, map[string]interface{}, error)
 
 	// PingAgent check whether the agent is up and sending next ping request in interval time.
 	PingAgent(agentId string, ip string, body string) (int, error)
