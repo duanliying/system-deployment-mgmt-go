@@ -30,7 +30,7 @@ const (
 	status  = "connected"
 	appId   = "000000000000000000000000"
 	agentId = "000000000000000000000001"
-	host    = "192.168.0.1"
+	host    = "127.0.0.1"
 	port    = "48098"
 )
 
@@ -62,10 +62,11 @@ func init() {
 	controller = AgentController{}
 }
 
-func TestCalledAddAgentWithoutBody_ExpectSuccess(t *testing.T) {
+func TestCalledAddAgentWithValidBody_ExpectSuccess(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
+	body := `{"ip":"127.0.0.1"}`
 	expectedRes := map[string]interface{}{
 		"id": "000000000000000000000001",
 	}
@@ -81,43 +82,7 @@ func TestCalledAddAgentWithoutBody_ExpectSuccess(t *testing.T) {
 	// pass mockObj to a real object.
 	dbConnector = dbConnectionMockObj
 
-	code, res, err := controller.AddAgent(host, "")
-
-	if err != nil {
-		t.Errorf("Unexpected err: %s", err.Error())
-	}
-
-	if code != results.OK {
-		t.Errorf("Expected code: %d, actual code: %d", results.OK, code)
-	}
-
-	if !reflect.DeepEqual(res, expectedRes) {
-		t.Error()
-	}
-}
-
-func TestCalledAddAgentWithValidBody_ExpectSuccess(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	body := `{"id":"000000000000000000000001"}`
-	expectedRes := map[string]interface{}{
-		"id": "000000000000000000000001",
-	}
-
-	dbConnectionMockObj := dbmocks.NewMockDBConnection(ctrl)
-	dbManagerMockObj := dbmocks.NewMockDBManager(ctrl)
-
-	gomock.InOrder(
-		dbConnectionMockObj.EXPECT().Connect().Return(dbManagerMockObj, nil),
-		dbManagerMockObj.EXPECT().UpdateAgentAddress(agentId, host, port).Return(nil),
-		dbManagerMockObj.EXPECT().UpdateAgentStatus(agentId, status).Return(nil),
-		dbManagerMockObj.EXPECT().Close(),
-	)
-	// pass mockObj to a real object.
-	dbConnector = dbConnectionMockObj
-
-	code, res, err := controller.AddAgent(host, body)
+	code, res, err := controller.AddAgent(body)
 
 	if err != nil {
 		t.Errorf("Unexpected err: %s", err.Error())
@@ -144,8 +109,8 @@ func TestCalledAddAgentWhenDBConnectionFailed_ExpectErrorReturn(t *testing.T) {
 	// pass mockObj to a real object.
 	dbConnector = dbConnectionMockObj
 
-	jsonStr := `{"host":"192.168.0.1","port": "8888"}`
-	code, _, err := controller.AddAgent(jsonStr, "")
+	body := `{"ip":"127.0.0.1"}`
+	code, _, err := controller.AddAgent(body)
 
 	if code != results.ERROR {
 		t.Errorf("Expected code: %d, actual code: %d", results.ERROR, code)
@@ -166,7 +131,7 @@ func TestCalledAddAgentWithInValidJsonFormatBody_ExpectSuccess(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	invalidBody := `{"id"}`
+	invalidBody := `{"ip"}`
 
 	dbConnectionMockObj := dbmocks.NewMockDBConnection(ctrl)
 	dbManagerMockObj := dbmocks.NewMockDBManager(ctrl)
@@ -178,7 +143,7 @@ func TestCalledAddAgentWithInValidJsonFormatBody_ExpectSuccess(t *testing.T) {
 	// pass mockObj to a real object.
 	dbConnector = dbConnectionMockObj
 
-	code, _, err := controller.AddAgent(host, invalidBody)
+	code, _, err := controller.AddAgent(invalidBody)
 
 	if code != results.ERROR {
 		t.Errorf("Expected code: %d, actual code: %d", results.ERROR, code)
@@ -211,7 +176,7 @@ func TestCalledAddAgentWithInvalidBodyNotIncludingIDField_ExpectSuccess(t *testi
 	// pass mockObj to a real object.
 	dbConnector = dbConnectionMockObj
 
-	code, _, err := controller.AddAgent(host, invalidBody)
+	code, _, err := controller.AddAgent(invalidBody)
 
 	if code != results.ERROR {
 		t.Errorf("Expected code: %d, actual code: %d", results.ERROR, code)
@@ -225,75 +190,6 @@ func TestCalledAddAgentWithInvalidBodyNotIncludingIDField_ExpectSuccess(t *testi
 	default:
 		t.Errorf("Expected err: %s, actual err: %s", "InvalidJSON", err.Error())
 	case errors.InvalidJSON:
-	}
-}
-
-func TestCalledAddAgentWithValidBodyWhenFailedToUpdateAddress_ExpectSuccess(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	body := `{"id":"000000000000000000000001"}`
-
-	dbConnectionMockObj := dbmocks.NewMockDBConnection(ctrl)
-	dbManagerMockObj := dbmocks.NewMockDBManager(ctrl)
-
-	gomock.InOrder(
-		dbConnectionMockObj.EXPECT().Connect().Return(dbManagerMockObj, nil),
-		dbManagerMockObj.EXPECT().UpdateAgentAddress(agentId, host, port).Return(notFoundError),
-		dbManagerMockObj.EXPECT().Close(),
-	)
-	// pass mockObj to a real object.
-	dbConnector = dbConnectionMockObj
-
-	code, _, err := controller.AddAgent(host, body)
-
-	if code != results.ERROR {
-		t.Errorf("Expected code: %d, actual code: %d", results.ERROR, code)
-	}
-
-	if err == nil {
-		t.Errorf("Expected err: %s, actual err: %s", "NotFound", "nil")
-	}
-
-	switch err.(type) {
-	default:
-		t.Errorf("Expected err: %s, actual err: %s", "NotFound", err.Error())
-	case errors.NotFound:
-	}
-}
-
-func TestCalledAddAgentWithValidBodyWhenFailedToUpdateStatus_ExpectSuccess(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	body := `{"id":"000000000000000000000001"}`
-
-	dbConnectionMockObj := dbmocks.NewMockDBConnection(ctrl)
-	dbManagerMockObj := dbmocks.NewMockDBManager(ctrl)
-
-	gomock.InOrder(
-		dbConnectionMockObj.EXPECT().Connect().Return(dbManagerMockObj, nil),
-		dbManagerMockObj.EXPECT().UpdateAgentAddress(agentId, host, port).Return(nil),
-		dbManagerMockObj.EXPECT().UpdateAgentStatus(agentId, status).Return(notFoundError),
-		dbManagerMockObj.EXPECT().Close(),
-	)
-	// pass mockObj to a real object.
-	dbConnector = dbConnectionMockObj
-
-	code, _, err := controller.AddAgent(host, body)
-
-	if code != results.ERROR {
-		t.Errorf("Expected code: %d, actual code: %d", results.ERROR, code)
-	}
-
-	if err == nil {
-		t.Errorf("Expected err: %s, actual err: %s", "NotFound", "nil")
-	}
-
-	switch err.(type) {
-	default:
-		t.Errorf("Expected err: %s, actual err: %s", "NotFound", err.Error())
-	case errors.NotFound:
 	}
 }
 
@@ -312,7 +208,8 @@ func TestCalledAddAgentWhenFailedToInsertNewAgentToDB_ExpectErrorReturn(t *testi
 	// pass mockObj to a real object.
 	dbConnector = dbConnectionMockObj
 
-	code, _, err := controller.AddAgent(host, "")
+	body := `{"ip":"127.0.0.1"}`
+	code, _, err := controller.AddAgent(body)
 
 	if code != results.ERROR {
 		t.Errorf("Expected code: %d, actual code: %d", results.ERROR, code)
@@ -374,38 +271,6 @@ func TestCalledPingAgentWhenDBHasNotMatchedAgent_ExpectErrorReturn(t *testing.T)
 	dbConnector = dbConnectionMockObj
 
 	code, err := controller.PingAgent(agentId, host, "")
-
-	if code != results.ERROR {
-		t.Errorf("Expected code: %d, actual code: %d", results.ERROR, code)
-	}
-
-	if err == nil {
-		t.Errorf("Expected err: %s, actual err: %s", "NotFound", "nil")
-	}
-
-	switch err.(type) {
-	default:
-		t.Errorf("Expected err: %s, actual err: %s", "NotFound", err.Error())
-	case errors.NotFound:
-	}
-}
-
-func TestCalledPingAgentWhenStoredIPDoesNotMatch_ExpectErrorReturn(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	dbConnectionMockObj := dbmocks.NewMockDBConnection(ctrl)
-	dbManagerMockObj := dbmocks.NewMockDBManager(ctrl)
-
-	gomock.InOrder(
-		dbConnectionMockObj.EXPECT().Connect().Return(dbManagerMockObj, nil),
-		dbManagerMockObj.EXPECT().GetAgent(agentId).Return(agent, nil),
-		dbManagerMockObj.EXPECT().Close(),
-	)
-	// pass mockObj to a real object.
-	dbConnector = dbConnectionMockObj
-
-	code, err := controller.PingAgent(agentId, "NewIP", "")
 
 	if code != results.ERROR {
 		t.Errorf("Expected code: %d, actual code: %d", results.ERROR, code)
