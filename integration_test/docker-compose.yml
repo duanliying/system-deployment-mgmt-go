@@ -14,7 +14,7 @@ services:
       - integration-network
 
   sdam:
-    image: docker.sec.samsung.net:5000/edge/servicedeployment/servicedeploymentagentmanager/ubuntu_x86_64:latest
+    image: target-project
     hostname: sdam
     ports:
       - "48099"
