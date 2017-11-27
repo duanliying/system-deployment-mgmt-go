@@ -59,7 +59,7 @@ func init() {
 // AddAgent inserts a new agent with ip which is passed in call to function.
 // If successful, a unique id that is created automatically will be returned.
 // otherwise, an appropriate error will be returned.
-func (AgentController) AddAgent(ip string, body string) (int, map[string]interface{}, error) {
+func (AgentController) AddAgent(body string) (int, map[string]interface{}, error) {
 	logger.Logging(logger.DEBUG, "IN")
 	defer logger.Logging(logger.DEBUG, "OUT")
 
@@ -73,41 +73,20 @@ func (AgentController) AddAgent(ip string, body string) (int, map[string]interfa
 
 	// If body is not empty, try to get agent id from body.
 	// This code will be used to update the information of agent without changing id.
-	if body != "" {
-		bodyMap, err := convertJsonToMap(body)
-		if err != nil {
-			logger.Logging(logger.ERROR, err.Error())
-			return results.ERROR, nil, err
-		}
+	bodyMap, err := convertJsonToMap(body)
+	if err != nil {
+		logger.Logging(logger.ERROR, err.Error())
+		return results.ERROR, nil, err
+	}
 
-		// Check whether 'id' is included.
-		_, exists := bodyMap["id"]
-		if !exists {
-			return results.ERROR, nil, errors.InvalidJSON{"id field is required"}
-		}
-
-		// Update the information of agent with given ip.
-		agentId := bodyMap["id"].(string)
-		err = db.UpdateAgentAddress(agentId, ip, DEFAULT_SDA_PORT)
-		if err != nil {
-			logger.Logging(logger.ERROR, err.Error())
-			return results.ERROR, nil, err
-		}
-
-		// Status is updated with 'connected'.
-		err = db.UpdateAgentStatus(agentId, STATUS_CONNECTED)
-		if err != nil {
-			logger.Logging(logger.ERROR, err.Error())
-			return results.ERROR, nil, err
-		}
-
-		res := make(map[string]interface{})
-		res[ID] = agentId
-		return results.OK, res, err
+	// Check whether 'ip' is included.
+	_, exists := bodyMap["ip"]
+	if !exists {
+		return results.ERROR, nil, errors.InvalidJSON{"ip field is required"}
 	}
 
 	// Add new agent to database with given ip, port, status.
-	agent, err := db.AddAgent(ip, DEFAULT_SDA_PORT, STATUS_CONNECTED)
+	agent, err := db.AddAgent(bodyMap["ip"].(string), DEFAULT_SDA_PORT, STATUS_CONNECTED)
 	if err != nil {
 		logger.Logging(logger.ERROR, err.Error())
 		return results.ERROR, nil, err
@@ -136,16 +115,10 @@ func (AgentController) PingAgent(agentId string, ip string, body string) (int, e
 	defer db.Close()
 
 	// Get agent specified by agentId parameter.
-	agent, err := db.GetAgent(agentId)
+	_, err = db.GetAgent(agentId)
 	if err != nil {
 		logger.Logging(logger.ERROR, err.Error())
 		return results.ERROR, err
-	}
-
-	storedIP := agent["host"].(string)
-	if ip != storedIP {
-		logger.Logging(logger.ERROR, "address does not match")
-		return results.ERROR, errors.NotFound{"address does not match, try registration again"}
 	}
 
 	bodyMap, err := convertJsonToMap(body)

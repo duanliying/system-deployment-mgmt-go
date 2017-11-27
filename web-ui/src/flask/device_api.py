@@ -318,10 +318,13 @@ class DeviceAPI:
 
             d = dict()
             d2 = dict()
+            d3 = dict()
             data = json.loads(request.data)
 
-            d2.update({"interval": str(data["interval"])})
-            d.update({"ip": str(SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port())).split(':')[0], "healthCheck": d2})
+            d2.update({"manager": str(SDAManager().get_sda_manager_ip())})
+            d2.update({"agent": str(data["ip"])})
+            d3.update({"interval": str(data["interval"])})
+            d.update({"ip": d2, "healthCheck": d3})
 
             response = requests.post(
                 url="http://" + data["ip"] + ":" + str(Port.sda_port()) + "/api/v1/register",
