@@ -3,7 +3,7 @@
 version: '2'
 services:
   sda:
-    image: docker.sec.samsung.net:5000/edge/servicedeployment/servicedeploymentagent/ubuntu_x86_64:latest
+    image: docker.sec.samsung.net:5000/edge/system-deployment-agent/ubuntu_x86_64:latest
     hostname: sda
     ports:
       - "48098"
