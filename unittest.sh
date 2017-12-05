@@ -12,6 +12,7 @@ for pkg in "${pkg_list[@]}"; do
     go test -coverprofile=$count.cover.out $pkg
     if [ $? -ne 0 ]; then
 	echo "Unittest is failed."
+	rm *.out *.test
 	exit 1
     fi
     count=$count.0
