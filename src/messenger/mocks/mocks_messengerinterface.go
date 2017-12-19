@@ -151,3 +151,16 @@ func (m *MockMessengerInterface) UpdateAppInfo(member []map[string]interface{}, 
 func (mr *MockMessengerInterfaceMockRecorder) UpdateAppInfo(member, appId, data interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAppInfo", reflect.TypeOf((*MockMessengerInterface)(nil).UpdateAppInfo), member, appId, data)
 }
+
+// Unregister mocks base method
+func (m *MockMessengerInterface) Unregister(members []map[string]interface{}) ([]int, []string) {
+	ret := m.ctrl.Call(m, "Unregister", members)
+	ret0, _ := ret[0].([]int)
+	ret1, _ := ret[1].([]string)
+	return ret0, ret1
+}
+
+// Unregister indicates an expected call of Unregister
+func (mr *MockMessengerInterfaceMockRecorder) Unregister(members interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Unregister", reflect.TypeOf((*MockMessengerInterface)(nil).Unregister), members)
+}

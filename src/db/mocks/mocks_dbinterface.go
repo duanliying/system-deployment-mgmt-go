@@ -99,6 +99,19 @@ func (mr *MockCommandMockRecorder) GetAgent(agent_id interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAgent", reflect.TypeOf((*MockCommand)(nil).GetAgent), agent_id)
 }
 
+// GetAgentByIP mocks base method
+func (m *MockCommand) GetAgentByIP(ip string) (map[string]interface{}, error) {
+	ret := m.ctrl.Call(m, "GetAgentByIP", ip)
+	ret0, _ := ret[0].(map[string]interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAgentByIP indicates an expected call of GetAgentByIP
+func (mr *MockCommandMockRecorder) GetAgentByIP(ip interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAgentByIP", reflect.TypeOf((*MockCommand)(nil).GetAgentByIP), ip)
+}
+
 // GetAllAgents mocks base method
 func (m *MockCommand) GetAllAgents() ([]map[string]interface{}, error) {
 	ret := m.ctrl.Call(m, "GetAllAgents")
@@ -368,6 +381,19 @@ func (mr *MockDBManagerMockRecorder) GetAgent(agent_id interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAgent", reflect.TypeOf((*MockDBManager)(nil).GetAgent), agent_id)
 }
 
+// GetAgentByIP mocks base method
+func (m *MockDBManager) GetAgentByIP(ip string) (map[string]interface{}, error) {
+	ret := m.ctrl.Call(m, "GetAgentByIP", ip)
+	ret0, _ := ret[0].(map[string]interface{})
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAgentByIP indicates an expected call of GetAgentByIP
+func (mr *MockDBManagerMockRecorder) GetAgentByIP(ip interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAgentByIP", reflect.TypeOf((*MockDBManager)(nil).GetAgentByIP), ip)
+}
+
 // GetAllAgents mocks base method
 func (m *MockDBManager) GetAllAgents() ([]map[string]interface{}, error) {
 	ret := m.ctrl.Call(m, "GetAllAgents")
@@ -576,4 +602,3 @@ func (m *MockDBConnection) Connect() (db.DBManager, error) {
 func (mr *MockDBConnectionMockRecorder) Connect() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Connect", reflect.TypeOf((*MockDBConnection)(nil).Connect))
 }
-
