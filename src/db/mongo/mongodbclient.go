@@ -224,6 +224,23 @@ func (client *MongoDBManager) GetAgent(agent_id string) (map[string]interface{},
 	return result, err
 }
 
+// GetAgentByIP returns single document specified by ip parameter.
+// If successful, this function returns an error as nil.
+func (client *MongoDBManager) GetAgentByIP(ip string) (map[string]interface{}, error) {
+	logger.Logging(logger.DEBUG, "IN")
+	defer logger.Logging(logger.DEBUG, "OUT")
+
+	agent := Agent{}
+	query := bson.M{"host": ip}
+	err := client.getCollection(AGENT_COLLECTION).Find(query).One(&agent)
+	if err != nil {
+		return nil, ConvertMongoError(err, ip)
+	}
+
+	result := agent.convertToMap()
+	return result, err
+}
+
 // GetAllAgents returns all documents from 'agent' collection.
 // If successful, this function returns an error as nil.
 // otherwise, an appropriate error will be returned.

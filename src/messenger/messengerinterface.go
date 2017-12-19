@@ -25,4 +25,5 @@ type MessengerInterface interface {
 	UpdateApp(members []map[string]interface{}, appId string) (respCode []int, respBody []string)
 	InfoApps(member []map[string]interface{}) (respCode []int, respBody []string)
 	UpdateAppInfo(member []map[string]interface{}, appId string, data string) (respCode []int, respBody []string)
-}		
+	Unregister(members []map[string]interface{}) (respCode []int, respBody []string)
+}

@@ -125,6 +125,16 @@ func (SdamMsgrImpl) UpdateAppInfo(member []map[string]interface{}, appId string,
 	return changeToReturnValue(respList)
 }
 
+// Unregister make a url using /api/v1/unregister and send a HTTP(POST) request.
+func (SdamMsgrImpl) Unregister(member []map[string]interface{}) (respCode []int, respBody []string) {
+	logger.Logging(logger.DEBUG, "IN")
+	defer logger.Logging(logger.DEBUG, "OUT")
+
+	urls := setUrlList(member, url.Unregister())
+	respList := sendHttpRequest("POST", urls)
+	return changeToReturnValue(respList)
+}
+
 // Len returns length of httpResponse.
 func (arr sortRespSlice) Len() int {
 	return len(arr)
