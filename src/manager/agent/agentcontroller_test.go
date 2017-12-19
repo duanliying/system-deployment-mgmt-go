@@ -76,6 +76,7 @@ func TestCalledAddAgentWithValidBody_ExpectSuccess(t *testing.T) {
 
 	gomock.InOrder(
 		dbConnectionMockObj.EXPECT().Connect().Return(dbManagerMockObj, nil),
+		dbManagerMockObj.EXPECT().GetAgentByIP(host).Return(nil, notFoundError),
 		dbManagerMockObj.EXPECT().AddAgent(host, port, status).Return(agent, nil),
 		dbManagerMockObj.EXPECT().Close(),
 	)
@@ -202,6 +203,7 @@ func TestCalledAddAgentWhenFailedToInsertNewAgentToDB_ExpectErrorReturn(t *testi
 
 	gomock.InOrder(
 		dbConnectionMockObj.EXPECT().Connect().Return(dbManagerMockObj, nil),
+		dbManagerMockObj.EXPECT().GetAgentByIP(host).Return(nil, notFoundError),
 		dbManagerMockObj.EXPECT().AddAgent(host, port, status).Return(nil, notFoundError),
 		dbManagerMockObj.EXPECT().Close(),
 	)
@@ -325,14 +327,18 @@ func TestCalledDeleteAgent_ExpectSuccess(t *testing.T) {
 
 	dbConnectionMockObj := dbmocks.NewMockDBConnection(ctrl)
 	dbManagerMockObj := dbmocks.NewMockDBManager(ctrl)
+	msgMockObj := msgmocks.NewMockMessengerInterface(ctrl)
 
 	gomock.InOrder(
 		dbConnectionMockObj.EXPECT().Connect().Return(dbManagerMockObj, nil),
+		dbManagerMockObj.EXPECT().GetAgent(agentId).Return(agent, nil),
+		msgMockObj.EXPECT().Unregister(address).Return(respCode, respStr),
 		dbManagerMockObj.EXPECT().DeleteAgent(agentId).Return(nil),
 		dbManagerMockObj.EXPECT().Close(),
 	)
 	// pass mockObj to a real object.
 	dbConnector = dbConnectionMockObj
+	httpMessenger = msgMockObj
 
 	code, err := controller.DeleteAgent(agentId)
 
@@ -383,7 +389,7 @@ func TestCalledDeleteAgentWhenDBHasNotMatchedAgent_ExpectErrorReturn(t *testing.
 
 	gomock.InOrder(
 		dbConnectionMockObj.EXPECT().Connect().Return(dbManagerMockObj, nil),
-		dbManagerMockObj.EXPECT().DeleteAgent(agentId).Return(notFoundError),
+		dbManagerMockObj.EXPECT().GetAgent(agentId).Return(nil, notFoundError),
 		dbManagerMockObj.EXPECT().Close(),
 	)
 	// pass mockObj to a real object.
