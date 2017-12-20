@@ -29,7 +29,7 @@ class GroupAPI:
 
             response = requests.get(
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups",
-                timeout=300)
+                timeout=1500)
 
             if response.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -73,11 +73,11 @@ class GroupAPI:
             response = requests.get(
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups/"
                     + SDAManager.get_group_id(),
-                timeout=300)
+                timeout=1500)
 
             response2 = requests.get(
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents",
-                timeout=300)
+                timeout=1500)
 
             if response.status_code is not 200 or response2.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -109,13 +109,13 @@ class GroupAPI:
             data = json.loads(request.data)
             response = requests.post(
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups/create",
-                timeout=300)
+                timeout=1500)
 
             response2 = requests.post(
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups/"
                     + response.json()["id"] + "/join",
                 data=json.dumps(data["members"]),
-                timeout=300)
+                timeout=1500)
 
             if response.status_code is not 200 or response2.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -144,7 +144,7 @@ class GroupAPI:
             response = requests.delete(
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups/"
                     + SDAManager.get_group_id(),
-                timeout=300)
+                timeout=1500)
 
             if response.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -163,7 +163,7 @@ class GroupAPI:
             response = requests.get(
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups/"
                     + SDAManager.get_group_id(),
-                timeout=300)
+                timeout=1500)
 
             response2 = requests.get(
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents")
@@ -203,7 +203,7 @@ class GroupAPI:
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups/"
                     + SDAManager.get_group_id() + "/deploy",
                 data=data["data"],
-                timeout=300)
+                timeout=1500)
 
             if response.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -238,7 +238,7 @@ class GroupAPI:
 
             response = requests.get(
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups/" + SDAManager.get_group_id(),
-                timeout=300)
+                timeout=1500)
 
             if response.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -259,13 +259,13 @@ class GroupAPI:
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups/"
                     + SDAManager.get_group_id() + "/join",
                 data=json.dumps(join_dict),
-                timeout=300)
+                timeout=1500)
 
             response3 = requests.post(
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups/"
                     + SDAManager.get_group_id() + "/leave",
                 data=json.dumps(leave_dict),
-                timeout=300)
+                timeout=1500)
 
             if response2.status_code is not 200 and response3.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -285,7 +285,7 @@ class GroupAPI:
             response = requests.get(
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups/"
                     + SDAManager.get_group_id() + "/apps",
-                timeout=300)
+                timeout=1500)
 
             if response.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -303,7 +303,7 @@ class GroupAPI:
                 response2 = requests.get(
                     url="http://" + SDAManager().get_sda_manager_ip() + ":" + str( Port.sda_manager_port()) + "/api/v1/groups/"
                         + SDAManager.get_group_id() + "/apps/" + str(obj["id"]),
-                    timeout=300)
+                    timeout=1500)
 
                 if response2.status_code is not 200:
                     logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -334,12 +334,12 @@ class GroupAPI:
 
                 response = requests.get(
                     url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents",
-                    timeout=300)
+                    timeout=1500)
 
                 response2 = requests.get(
                     url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups/"
                         + SDAManager.get_group_id() + "/apps",
-                    timeout=300)
+                    timeout=1500)
 
                 if response.status_code is not 200:
                     logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -370,7 +370,7 @@ class GroupAPI:
                 response = requests.delete(
                     url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups/"
                         + SDAManager.get_group_id() + "/apps/" + SDAManager.get_app_id(),
-                    timeout=300)
+                    timeout=1500)
 
                 if response.status_code is not 200:
                     logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -387,7 +387,7 @@ class GroupAPI:
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups/"
                     + SDAManager.get_group_id() + "/apps/" + SDAManager.get_app_id()
                     + "/start",
-                timeout=300)
+                timeout=1500)
 
             if response.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -404,7 +404,7 @@ class GroupAPI:
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups/"
                     + SDAManager.get_group_id() + "/apps/" + SDAManager.get_app_id()
                     + "/stop",
-                timeout=300)
+                timeout=1500)
 
             if response.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -421,7 +421,7 @@ class GroupAPI:
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups/"
                     + SDAManager.get_group_id() + "/apps/" + SDAManager.get_app_id()
                     + "/update",
-                timeout=300)
+                timeout=1500)
 
             if response.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -440,7 +440,7 @@ class GroupAPI:
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/groups/"
                     + SDAManager.get_group_id() + "/apps/" + SDAManager.get_app_id(),
                 data=data["data"],
-                timeout=300)
+                timeout=1500)
 
             if response.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
