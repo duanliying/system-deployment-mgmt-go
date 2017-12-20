@@ -85,8 +85,17 @@ func (AgentController) AddAgent(body string) (int, map[string]interface{}, error
 		return results.ERROR, nil, errors.InvalidJSON{"ip field is required"}
 	}
 
+	// Get agent with given ip.
+	agent, err := db.GetAgentByIP(bodyMap["ip"].(string))
+	if err == nil {
+		// Agent with that ip address already exists in the database.
+		res := make(map[string]interface{})
+		res[ID] = agent[ID]
+		return results.OK, res, err
+	}
+
 	// Add new agent to database with given ip, port, status.
-	agent, err := db.AddAgent(bodyMap["ip"].(string), DEFAULT_SDA_PORT, STATUS_CONNECTED)
+	agent, err = db.AddAgent(bodyMap["ip"].(string), DEFAULT_SDA_PORT, STATUS_CONNECTED)
 	if err != nil {
 		logger.Logging(logger.ERROR, err.Error())
 		return results.ERROR, nil, err
@@ -197,10 +206,19 @@ func (AgentController) DeleteAgent(agentId string) (int, error) {
 	}
 	defer db.Close()
 
-	// Delete agent specified by agentId parameter.
-	err = db.DeleteAgent(agentId)
+	// Get agent specified by agentId parameter.
+	agent, err := db.GetAgent(agentId)
 	if err != nil {
 		logger.Logging(logger.ERROR, err.Error())
+		return results.ERROR, err
+	}
+
+	// Send request to unregister a specific agent.
+	address := getAgentAddress(agent)
+	codes, _ := httpMessenger.Unregister(address)
+
+	result := codes[0]
+	if !isSuccessCode(result) {
 		return results.ERROR, err
 	}
 
@@ -208,6 +226,13 @@ func (AgentController) DeleteAgent(agentId string) (int, error) {
 		timers[agentId] <- true
 	}
 	delete(timers, agentId)
+
+	// Delete agent specified by agentId parameter.
+	err = db.DeleteAgent(agentId)
+	if err != nil {
+		logger.Logging(logger.ERROR, err.Error())
+		return results.ERROR, err
+	}
 
 	return results.OK, err
 }

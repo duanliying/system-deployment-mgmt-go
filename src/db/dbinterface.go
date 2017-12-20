@@ -34,6 +34,9 @@ type Command interface {
 	// GetAgent returns single document from db related to agent.
 	GetAgent(agent_id string) (map[string]interface{}, error)
 
+	// GetAgentByIP returns single document from db related to agent.
+	GetAgentByIP(ip string) (map[string]interface{}, error)
+
 	// GetAllAgents returns all documents from db related to agent.
 	GetAllAgents() ([]map[string]interface{}, error)
 
