@@ -37,7 +37,7 @@ class DeviceAPI:
 
             response = requests.get(
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents",
-                timeout=300)
+                timeout=1500)
 
             if response.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -80,7 +80,7 @@ class DeviceAPI:
             response = requests.get(
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents/"
                     + SDAManager.get_device_id(),
-                timeout=300)
+                timeout=1500)
 
             if response.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -98,7 +98,7 @@ class DeviceAPI:
                 response2 = requests.get(
                     url="http://" + SDAManager().get_sda_manager_ip() + ":" + str( Port.sda_manager_port()) + "/api/v1/agents/"
                         + SDAManager.get_device_id() + "/apps/" + str(obj),
-                    timeout=300)
+                    timeout=1500)
 
                 if response2.status_code is not 200:
                     logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -133,7 +133,7 @@ class DeviceAPI:
                 response = requests.get(
                     url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents/"
                         + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id(),
-                    timeout=300)
+                    timeout=1500)
 
                 if response.status_code is not 200:
                     logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -154,7 +154,7 @@ class DeviceAPI:
                     url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(
                         Port.sda_manager_port()) + "/api/v1/agents/"
                         + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id(),
-                    timeout=300)
+                    timeout=1500)
 
                 if response.status_code is not 200:
                     logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -177,7 +177,7 @@ class DeviceAPI:
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents/"
                     + SDAManager.get_device_id() + "/deploy",
                 data=data["data"],
-                timeout=300)
+                timeout=1500)
 
             if response.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -208,7 +208,7 @@ class DeviceAPI:
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents/"
                     + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id()
                     + "/start",
-                timeout=300)
+                timeout=1500)
 
             if response.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -225,7 +225,7 @@ class DeviceAPI:
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents/"
                     + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id()
                     + "/stop",
-                timeout=300)
+                timeout=1500)
 
             if response.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -242,7 +242,7 @@ class DeviceAPI:
                 url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents/"
                     + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id()
                     + "/update",
-                timeout=300)
+                timeout=1500)
 
             if response.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -260,7 +260,7 @@ class DeviceAPI:
                 response = requests.get(
                     url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents/"
                         + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id(),
-                    timeout=300)
+                    timeout=1500)
 
                 if response.status_code is not 200:
                     logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -277,7 +277,7 @@ class DeviceAPI:
                     url="http://" + SDAManager().get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents/"
                         + SDAManager.get_device_id() + "/apps/" + SDAManager.get_app_id(),
                     data=data["data"],
-                    timeout=300)
+                    timeout=1500)
 
                 if response.status_code is not 200:
                     logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -329,7 +329,7 @@ class DeviceAPI:
             response = requests.post(
                 url="http://" + data["ip"] + ":" + str(Port.sda_port()) + "/api/v1/register",
                 data=json.dumps(d),
-                timeout=300)
+                timeout=1500)
 
             if response.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")
@@ -343,8 +343,8 @@ class DeviceAPI:
             logging.info("[" + request.method + "] sda manager device register - IN")
 
             response = requests.post(
-                url="http://" + SDAManager.get_device_ip() + ":" + SDAManager.get_device_port() + "/api/v1/unregister",
-                timeout=300)
+                url="http://" + SDAManager.get_sda_manager_ip() + ":" + str(Port.sda_manager_port()) + "/api/v1/agents/" + SDAManager.get_device_id() + "/unregister",
+                timeout=1500)
 
             if response.status_code is not 200:
                 logging.error("SDAM Server Return Error, Error Code(" + str(response.status_code) + ") - OUT")

@@ -222,6 +222,7 @@ $(function() {
             success: function(data, code) {
                 if (code == "success") {
                     var obj = $.parseJSON(data);
+                    obj = $.parseJSON(obj);
                     $("#textarea_update_yaml").val(obj);
                 } else {
                     swal("Server return error", "", "error");
