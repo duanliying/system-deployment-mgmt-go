@@ -39,11 +39,15 @@ Required options to run Docker image
 - port
     - 48099:48099
 - volume
-    - "host folder"/data/db:/data/db
+    - "host folder"/data/db:/data/db (Note that you should replace "host folder" to a desired folder on your host machine)
 
 You can execute it with a Docker image as follows:
 ```shell
-$ docker run -it -p 48099:48099 -v "host folder"/data/db:/data/db system-deployment-mgmt-go-ubuntu
+$ docker run -it -p 48099:48099 -v /data/db:/data/db system-deployment-mgmt-go-ubuntu
+```
+If it succeeds, you can see log messages on your screen as follows:
+```shell
+$ docker run -it -p 48099:48099 -v /data/db:/data/db system-deployment-mgmt-go-ubuntu
 2017-12-28T02:40:03.777+0000 I CONTROL  [initandlisten] MongoDB starting : pid=7 port=27017 dbpath=/data/db 64-bit host=e180bb47c8c7
 2017-12-28T02:40:03.777+0000 I CONTROL  [initandlisten] db version v3.4.4
 2017-12-28T02:40:03.778+0000 I CONTROL  [initandlisten] git version: 888390515874a9debd1b6c5d36559ca86b44babd
@@ -77,15 +81,24 @@ $ docker run -it -p 48099:48099 -v "host folder"/data/db:/data/db system-deploym
 ```
 
 ## (Optional) How to enable QEMU environment on your computer
-#### Prerequisites ####
+QEMU could be useful if you want to test your implemetation on various CPU architectures(e.g. ARM, ARM64) but you have only Ubuntu PC. To enable QEMU on your machine, please do as follows.
+
+Required packages for QEMU:
 ```shell
 $ apt-get install -y qemu-user-static binfmt-support
 ```
-#### For ARM 32bit ####
+For ARM 32bit:
 ```shell
-> echo ':arm:M::\x7fELF\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/bin/qemu-arm-static:' > /proc/sys/fs/binfmt_misc/register <br />
+$ echo ':arm:M::\x7fELF\x01\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x28\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff\xff:/usr/bin/qemu-arm-static:' > /proc/sys/fs/binfmt_misc/register <br />
 ```
-#### For ARM 64bit ####
+For ARM 64bit:
 ```shell
-> echo ':aarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\xb7:\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff:/usr/bin/qemu-aarch64-static:' > /proc/sys/fs/binfmt_misc/register <br />
+$ echo ':aarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\xb7:\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff:/usr/bin/qemu-aarch64-static:' > /proc/sys/fs/binfmt_misc/register <br />
+```
+
+Now, you can build your implementation and dockerize it for ARM and ARM64 on your Ubuntu PC. The below is an example for ARM build.
+
+```shell
+$ ./build.sh
+$ docker build -t system-deployment-mgmt-go-arm -f Dockerfile_arm .
 ```
