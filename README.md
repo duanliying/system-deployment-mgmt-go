@@ -99,6 +99,6 @@ $ echo ':aarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\
 Now, you can build your implementation and dockerize it for ARM and ARM64 on your Ubuntu PC. The below is an example for ARM build.
 
 ```shell
-$ ./build.sh
+$ ./build_arm.sh
 $ docker build -t system-deployment-mgmt-go-arm -f Dockerfile_arm .
 ```
