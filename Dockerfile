@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 ###############################################################################
-# Docker image for "Service Deployment Agent"
+# Docker image for "Service Deployment Agent Manager"
 FROM alpine:3.6
 
 # environment variables

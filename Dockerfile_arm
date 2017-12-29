@@ -21,7 +21,7 @@ FROM armhf/ubuntu:16.10
 COPY qemu-arm-static /usr/bin/qemu-arm-static
 
 #environment variables 
-ENV APP_DIR=/ServiceDeploymentAgent
+ENV APP_DIR=/ServiceDeploymentAgentManager
 ENV APP_PORT=48099
 
 # install mongodb
