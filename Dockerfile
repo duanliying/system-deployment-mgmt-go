@@ -20,29 +20,24 @@ FROM alpine:3.6
 # environment variables
 ENV APP_DIR=/ServiceDeploymentAgentManager
 ENV APP_PORT=48099
-
-# install docker-compose
-RUN apk update
-#RUN apk add curl openssl
+ENV APP=pharos-anchor
 
 # install MongoDB
 RUN apk add --no-cache mongodb && \
     rm -rf /var/cache/apk/*
 
-#copy files
-COPY main $APP_DIR/
-COPY run.sh $APP_DIR
+# copy files
+COPY $APP run.sh $APP_DIR/
 
-#expose notifications port
+# expose notifications port
 EXPOSE $APP_PORT
 
-#set the working directory
+# set the working directory
 WORKDIR $APP_DIR
 
-#make mogodb volume
-RUN mkdir /data
-RUN mkdir /data/db
+# make mogodb volume
+RUN mkdir /data && mkdir /data/db
 VOLUME /data/db
 
-#kick off the agent container
+# kick off the agent container
 CMD ["sh", "run.sh"]
