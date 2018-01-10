@@ -16,4 +16,4 @@
 ###############################################################################
 #!/bin/bash
 mongod --smallfiles &
-/ServiceDeploymentAgentManager/main
+/ServiceDeploymentAgentManager/pharos-anchor

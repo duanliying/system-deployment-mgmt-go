@@ -16,8 +16,51 @@
 ###############################################################################
 #!/bin/bash
 
+echo -e "\n\033[33m"Start building of Pharos-Anchor"\033[0m"
 export GOPATH=$PWD
-go get gopkg.in/mgo.v2
-CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -a -ldflags '-extldflags "-static"'  src/main/main.go
 
+function func_cleanup(){
+    rm -rf rm -rf $GOPATH/src/golang.org
+}
+
+function build(){
+    CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -o pharos-anchor -a -ldflags '-extldflags "-static"'  src/main/main.go
+    if [ $? -ne 0 ]; then
+        echo -e "\n\033[31m"build fail"\033[0m"
+        func_cleanup
+        exit 1
+    fi
+}
+
+function download_pkgs(){
+    pkg_list=(
+        "gopkg.in/mgo.v2"
+        )
+
+    idx=1
+    for pkg in "${pkg_list[@]}"; do
+        echo -ne "(${idx}/${#pkg_list[@]}) go get $pkg"
+        go get $pkg
+        if [ $? -ne 0 ]; then
+            echo -e "\n\033[31m"download fail"\033[0m"
+            func_cleanup
+            exit 1
+        fi
+        echo ": Done"
+        idx=$((idx+1))
+    done
+}
+
+echo -e "\nDownload dependent go-pkgs"
+download_pkgs
+
+echo -ne "\nMaking executable file of Pharos-Anchor service"
+build
+echo ": Done"
+
+echo -ne "\nPost processing"
 cp /usr/bin/qemu-arm-static .
+func_cleanup
+echo ": Done"
+
+echo -e "\n\033[33m"Succeed build of Pharos-Anchor"\033[0m"
